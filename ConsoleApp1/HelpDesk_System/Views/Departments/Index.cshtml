@@ -1,0 +1,27 @@
+﻿@model IEnumerable<HelpDesk_System.Models.Department>
+@{
+    ViewData["Title"] = "Departments";
+}
+
+<a asp-action="Workload" class="btn btn-outline-primary btn-sm">
+    <i class="bi bi-bar-chart"></i> View Workload
+</a>
+
+<h2>Departments</h2>
+<table class="table table-striped mt-3">
+    <thead>
+        <tr><th>ID</th><th>Name</th><th>Description</th><th>Status</th><th>Employee Count</th></tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.Name</td>
+                <td>@item.Description</td>
+                <td>@(item.IsActive ? "Active" : "Inactive")</td>
+                <td>@item.Employees.Count</td>
+            </tr>
+        }
+    </tbody>
+</table>
