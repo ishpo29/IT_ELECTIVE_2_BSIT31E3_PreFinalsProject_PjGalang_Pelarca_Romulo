@@ -1,0 +1,20 @@
+﻿@model IEnumerable<HelpDesk_System.Models.ViewModels.CategoryHierarchyViewModel>
+@{
+    ViewData["Title"] = "Category Hierarchy";
+}
+
+<h2>Category Hierarchy</h2>
+<table class="table table-hover align-middle mt-3">
+    <thead class="table-light">
+        <tr><th>Category</th><th>Parent Category</th></tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.CategoryName</td>
+                <td>@item.ParentCategoryName</td>
+            </tr>
+        }
+    </tbody>
+</table>

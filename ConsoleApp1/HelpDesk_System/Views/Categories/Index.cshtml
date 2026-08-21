@@ -1,0 +1,23 @@
+﻿@model IEnumerable<HelpDesk_System.Models.Category>
+@{
+    ViewData["Title"] = "Categories";
+}
+
+<a asp-action="Hierarchy" class="btn btn-outline-primary btn-sm">View Hierarchy</a>
+
+<h2>Categories</h2>
+<table class="table table-striped mt-3">
+    <thead>
+        <tr><th>ID</th><th>Name</th><th>Description</th></tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.Name</td>
+                <td>@item.Description</td>
+            </tr>
+        }
+    </tbody>
+</table>
