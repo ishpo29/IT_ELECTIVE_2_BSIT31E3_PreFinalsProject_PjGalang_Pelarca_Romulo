@@ -1,0 +1,175 @@
+﻿@model HelpDesk_System.Models.Ticket
+
+@{
+    ViewData["Title"] = $"Ticket #{Model.Id} Details";
+
+    var priorityClass = Model.Priority.Name switch
+    {
+        "High" or "Urgent" => "bg-danger-subtle text-danger border-danger-subtle",
+        "Medium" => "bg-warning-subtle text-warning-emphasis border-warning-subtle",
+        _ => "bg-info-subtle text-info-emphasis border-info-subtle"
+    };
+
+    var statusClass = Model.Status.Name switch
+    {
+        "Closed" or "Resolved" => "bg-success-subtle text-success border-success-subtle",
+        "In Progress" => "bg-primary-subtle text-primary border-primary-subtle",
+        _ => "bg-secondary-subtle text-secondary border-secondary-subtle"
+    };
+}
+
+<div class="mb-4">
+    <a asp-action="Index" class="btn btn-outline-secondary btn-sm mb-3">
+        <i class="bi bi-arrow-left me-1"></i> Back to Tickets
+    </a>
+    <div class="d-flex justify-content-between align-items-start">
+        <div>
+            <div class="d-flex align-items-center gap-2 mb-1">
+                <span class="fs-4 fw-bold text-dark">#@Model.Id - @Model.Subject</span>
+                <span class="badge border rounded-pill @statusClass px-3 py-1">@Model.Status.Name</span>
+                <span class="badge border rounded-pill @priorityClass px-3 py-1">@Model.Priority.Name Priority</span>
+            </div>
+            <p class="text-muted small mb-0">Created on @Model.CreatedAt</p>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+
+    <div class="col-lg-8">
+
+        <div class="card border-0 shadow-sm p-4 mb-4">
+            <h6 class="fw-bold text-uppercase text-muted small mb-3">Description</h6>
+            <p class="mb-0 text-secondary" style="white-space: pre-line;">@Model.Description</p>
+        </div>
+
+
+        <div class="card border-0 shadow-sm p-4 mb-4">
+            <h6 class="fw-bold text-uppercase text-muted small mb-3"><i class="bi bi-tags me-1"></i> Associated Tags</h6>
+            <div class="d-flex flex-wrap gap-2">
+                @if (Model.TicketTags != null && Model.TicketTags.Any())
+                {
+                    @foreach (var tagItem in Model.TicketTags)
+                    {
+                        <span class="badge bg-light text-dark border px-3 py-2 fs-6">
+                            <i class="bi bi-tag-fill text-primary me-1"></i> @(tagItem.Tags?.Name ?? "Tags")
+                        </span>
+                    }
+                }
+                else
+                {
+                    <span class="text-muted small">No tags attached to this ticket.</span>
+                }
+            </div>
+        </div>
+
+
+        <div class="card border-0 shadow-sm p-4 mb-4">
+            <h6 class="fw-bold text-uppercase text-muted small mb-3"><i class="bi bi-chat-left-text me-1"></i> Comments & Updates</h6>
+            @if (Model.TicketComments != null && Model.TicketComments.Any())
+            {
+                <div class="d-flex flex-column gap-3">
+                    @foreach (var comment in Model.TicketComments)
+                    {
+                        <div class="p-3 rounded-3 bg-light border">
+                            <div class="d-flex justify-content-between mb-2">
+                                <strong class="text-dark">
+                                    @(comment.Employee != null
+                                        ? $"{comment.Employee.FirstName} {comment.Employee.LastName}"
+                                        : "Customer")
+                                    @if (comment.IsInternal)
+                                    {
+                                        <span class="badge bg-secondary-subtle text-secondary border ms-1">Internal</span>
+                                    }
+                                </strong>
+                                <small class="text-muted">@comment.CreatedAt</small>
+                            </div>
+                            <p class="mb-0 text-secondary small">@comment.Comment</p>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <span class="text-muted small">No comments posted yet.</span>
+            }
+        </div>
+
+
+        <div class="card border-0 shadow-sm p-4">
+            <h6 class="fw-bold text-uppercase text-muted small mb-3"><i class="bi bi-paperclip me-1"></i> Attachments</h6>
+            @if (Model.TicketAttachments != null && Model.TicketAttachments.Any())
+            {
+                <div class="row g-2">
+                    @foreach (var file in Model.TicketAttachments)
+                    {
+                        <div class="col-md-6">
+                            <div class="p-3 border rounded-3 d-flex align-items-center justify-content-between bg-white">
+                                <div class="d-flex align-items-center gap-2 overflow-hidden">
+                                    <i class="bi bi-file-earmark-text fs-4 text-primary"></i>
+                                    <span class="text-truncate small fw-medium">@file.FileName</span>
+                                </div>
+                                @* file.FilePath does not exist in the schema (only FileName, ContentType,
+                                   FileSize, UploadedAt) - no download link is possible without a stored
+                                   path. Replace with file size instead until/unless the schema changes. *@
+                                <span class="text-muted small">@(file.FileSize / 1024) KB</span>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <span class="text-muted small">No attachments uploaded.</span>
+            }
+        </div>
+    </div>
+
+
+    <div class="col-lg-4">
+
+        <div class="card border-0 shadow-sm p-4 mb-4">
+            <h6 class="fw-bold text-uppercase text-muted small mb-3"><i class="bi bi-person me-1"></i> Customer Information</h6>
+            <div class="fw-semibold text-dark">@(Model.Customer?.ContactName ?? "N/A")</div>
+            <div class="text-muted small mb-1">@(Model.Customer?.CompanyName ?? "Independent Customer")</div>
+            <div class="text-primary small"><i class="bi bi-envelope me-1"></i> @(Model.Customer?.Email ?? "No email provided")</div>
+        </div>
+
+        <div class="card border-0 shadow-sm p-4 mb-4">
+            <h6 class="fw-bold text-uppercase text-muted small mb-3"><i class="bi bi-folder me-1"></i> Category</h6>
+            <span class="badge bg-primary-subtle text-primary border border-primary-subtle align-self-start px-3 py-2 fs-6">
+                @(Model.Category?.Name ?? "General Category")
+            </span>
+        </div>
+        <div class="card border-0 shadow-sm p-4">
+            <h6 class="fw-bold text-uppercase text-muted small mb-3"><i class="bi bi-person-badge me-1"></i> Assigned Employees</h6>
+            @if (Model.TicketAssignments != null && Model.TicketAssignments.Any())
+            {
+                <div class="d-flex flex-column gap-2">
+                    @foreach (var assignment in Model.TicketAssignments)
+                    {
+                        <div class="d-flex align-items-center gap-2 p-2 border rounded-2">
+                            <div class="avatar-sm rounded-circle bg-indigo-light text-primary d-flex align-items-center justify-content-center fw-bold" style="width:32px; height:32px; font-size:12px;">
+                                @(assignment.Employee?.FirstName?.FirstOrDefault() ?? 'E')
+                            </div>
+                            <div>
+                                <div class="fw-semibold text-dark small">
+                                    @(assignment.Employee != null ? $"{assignment.Employee.FirstName} {assignment.Employee.LastName}" : "Assigned Staff")
+                                    @if (assignment.IsPrimary)
+                                    {
+                                        <span class="badge bg-primary-subtle text-primary border ms-1" style="font-size: 0.65rem;">Primary</span>
+                                    }
+                                </div>
+                                <div class="text-muted" style="font-size: 0.75rem;">Support Specialist</div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <span class="text-muted small">Unassigned</span>
+            }
+        </div>
+    </div>
+</div>
