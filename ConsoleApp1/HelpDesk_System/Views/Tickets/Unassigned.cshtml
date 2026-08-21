@@ -1,0 +1,24 @@
+﻿@model IEnumerable<HelpDesk_System.Models.ViewModels.UnassignedTicketViewModel>
+@{
+    ViewData["Title"] = "Unassigned Tickets";
+}
+
+<h2>Unassigned Tickets</h2>
+<table class="table table-hover align-middle mt-3">
+    <thead class="table-light">
+        <tr><th>Ticket</th><th>Subject</th><th>Customer</th><th>Priority</th><th>Status</th><th>Created At</th></tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>#@item.TicketId</td>
+                <td>@item.Subject</td>
+                <td>@item.CustomerName</td>
+                <td>@item.Priority</td>
+                <td>@item.Status</td>
+                <td>@item.CreatedAt</td>
+            </tr>
+        }
+    </tbody>
+</table>
