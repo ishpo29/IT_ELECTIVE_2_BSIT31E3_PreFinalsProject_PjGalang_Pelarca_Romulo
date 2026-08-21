@@ -1,0 +1,22 @@
+﻿@model IEnumerable<HelpDesk_System.Models.Customer>
+@{
+    ViewData["Title"] = "Customers";
+}
+
+<h2>Customers</h2>
+<table class="table table-hover mt-3">
+    <thead>
+        <tr><th>Company</th><th>Contact</th><th>Email</th><th>Phone</th></tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.CompanyName</td>
+                <td>@item.ContactName</td>
+                <td>@item.Email</td>
+                <td>@item.Phone</td>
+            </tr>
+        }
+    </tbody>
+</table>
