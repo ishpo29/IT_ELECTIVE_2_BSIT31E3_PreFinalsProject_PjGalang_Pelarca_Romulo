@@ -1,0 +1,27 @@
+﻿@model IEnumerable<HelpDesk_System.Models.ViewModels.EmployeeWorkloadViewModel>
+
+@{
+    ViewData["Title"] = "Employee Workload";
+}
+
+<h2>Employee Workload</h2>
+
+<table class="table table-hover align-middle">
+    <thead class="table-light">
+        <tr>
+            <th>Employee</th>
+            <th>Department</th>
+            <th>Unresolved Tickets</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.EmployeeName</td>
+                <td>@item.DepartmentName</td>
+                <td>@item.UnresolvedTicketCount</td>
+            </tr>
+        }
+    </tbody>
+</table>
