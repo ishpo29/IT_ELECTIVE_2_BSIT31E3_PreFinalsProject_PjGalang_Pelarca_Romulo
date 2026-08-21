@@ -1,50 +1,459 @@
-﻿<!DOCTYPE html>
+﻿@{
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - HelpDesk_System</title>
-    <script type="importmap"></script>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/HelpDesk_System.styles.css" asp-append-version="true" />
+    <title>@ViewData["Title"] - HelpDesk System</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
+    <style>
+        /* ============ TOKENS ============ */
+        :root {
+            --ink: #1B211F;
+            --bg: #ECEFEA;
+            --surface: #FFFFFF;
+            --line: #D7DDD7;
+            --muted: #5B6560;
+
+            --accent: #0E6B62;
+            --accent-hover: #0A524A;
+            --accent-soft: #DDECE9;
+
+            --sidebar-bg: #171D1B;
+            --sidebar-line: #2A322F;
+            --sidebar-text: #C3CBC6;
+            --sidebar-text-active: #FFFFFF;
+
+            --font-display: 'Archivo', system-ui, sans-serif;
+            --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+            --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, monospace;
+
+            --radius-sm: 4px;
+            --radius-md: 6px;
+            --radius-lg: 8px;
+
+            /* Bootstrap variable overrides so existing utility classes (badges, buttons,
+               text/bg colors) inherit the new palette without touching every view */
+            --bs-body-font-family: var(--font-body);
+            --bs-body-color: var(--ink);
+            --bs-body-bg: var(--bg);
+            --bs-border-color: var(--line);
+            --bs-border-radius: var(--radius-md);
+            --bs-border-radius-sm: var(--radius-sm);
+            --bs-border-radius-lg: var(--radius-lg);
+            --bs-link-color: var(--accent);
+            --bs-link-hover-color: var(--accent-hover);
+
+            --bs-primary: var(--accent);
+            --bs-primary-rgb: 14, 107, 98;
+            --bs-primary-bg-subtle: #DCECE9;
+            --bs-primary-border-subtle: #A4CFC8;
+            --bs-primary-text-emphasis: #0A4A44;
+
+            --bs-danger: #B23A2E;
+            --bs-danger-rgb: 178, 58, 46;
+            --bs-danger-bg-subtle: #F4E1DE;
+            --bs-danger-border-subtle: #E3B6AE;
+            --bs-danger-text-emphasis: #7C2A21;
+
+            --bs-warning: #9C6B18;
+            --bs-warning-rgb: 156, 107, 24;
+            --bs-warning-bg-subtle: #F2E7D2;
+            --bs-warning-border-subtle: #DFC287;
+            --bs-warning-text-emphasis: #6C4A10;
+
+            --bs-info: #2B5F7E;
+            --bs-info-rgb: 43, 95, 126;
+            --bs-info-bg-subtle: #DCE8EF;
+            --bs-info-border-subtle: #A8C6D4;
+            --bs-info-text-emphasis: #1C4356;
+
+            --bs-success: #2E7D52;
+            --bs-success-rgb: 46, 125, 82;
+            --bs-success-bg-subtle: #DCEEE2;
+            --bs-success-border-subtle: #A7D2B8;
+            --bs-success-text-emphasis: #1E5738;
+
+            --bs-secondary: #5B6560;
+            --bs-secondary-rgb: 91, 101, 96;
+            --bs-secondary-bg-subtle: #E3E6E2;
+            --bs-secondary-border-subtle: #C6CCC7;
+            --bs-secondary-text-emphasis: #3A423E;
+
+            --bs-light: #F3F4F1;
+            --bs-light-rgb: 243, 244, 241;
+        }
+
+        html, body { height: 100%; }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--bg);
+            color: var(--ink);
+            -webkit-font-smoothing: antialiased;
+            margin-bottom: 0 !important;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-display);
+            letter-spacing: -0.01em;
+            color: var(--ink);
+        }
+
+        code, .mono { font-family: var(--font-mono); }
+
+        a { text-decoration: none; }
+
+        /* ============ APP SHELL ============ */
+        .app-shell {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .app-sidebar {
+            width: 250px;
+            flex-shrink: 0;
+            background: var(--sidebar-bg);
+            color: var(--sidebar-text);
+            display: flex;
+            flex-direction: column;
+            padding: 1.25rem 1rem;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+        }
+
+        .sidebar-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 0.25rem 1.25rem 0.25rem;
+            margin-bottom: 0.75rem;
+            border-bottom: 1px solid var(--sidebar-line);
+        }
+
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+        }
+
+        .brand-mark {
+            width: 34px;
+            height: 34px;
+            background: var(--accent);
+            color: #fff;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .brand-text {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1.02rem;
+            line-height: 1.15;
+            color: #F4F6F3 !important;
+        }
+
+            .brand-text small {
+                display: block;
+                font-family: var(--font-mono);
+                font-weight: 500;
+                font-size: 0.65rem;
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+                color: var(--sidebar-text);
+            }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 0.15rem;
+            flex: 1;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            padding: 0.55rem 0.65rem;
+            border-radius: var(--radius-sm);
+            font-weight: 500;
+            font-size: 0.88rem;
+            color: var(--sidebar-text);
+            border-left: 2px solid transparent;
+            transition: background-color 0.15s ease, color 0.15s ease;
+        }
+
+            .sidebar-link i {
+                font-size: 1rem;
+                width: 1.1rem;
+                text-align: center;
+            }
+
+            .sidebar-link:hover {
+                background: rgba(255, 255, 255, 0.05);
+                color: var(--sidebar-text-active);
+            }
+
+            .sidebar-link.active {
+                background: rgba(14, 107, 98, 0.22);
+                color: var(--sidebar-text-active);
+                border-left-color: var(--accent);
+                font-weight: 600;
+            }
+
+        .sidebar-foot {
+            padding-top: 0.85rem;
+            border-top: 1px solid var(--sidebar-line);
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            letter-spacing: 0.04em;
+            color: #6B746F;
+        }
+
+        .app-main {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .app-topbar {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            padding: 1.35rem 2rem;
+            border-bottom: 1px solid var(--line);
+            background: var(--bg);
+        }
+
+        .topbar-toggle {
+            border: 1px solid var(--line);
+            background: var(--surface);
+            border-radius: var(--radius-sm);
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--ink);
+        }
+
+        .topbar-eyebrow {
+            display: block;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 0.15rem;
+        }
+
+        .topbar-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            margin: 0;
+            letter-spacing: -0.02em;
+        }
+
+        .app-content {
+            flex: 1;
+            padding: 2rem;
+        }
+
+        .app-footer {
+            padding: 1rem 2rem;
+            border-top: 1px solid var(--line);
+            color: var(--muted);
+            font-size: 0.8rem;
+        }
+
+        @@media (max-width: 991.98px) {
+            .app-sidebar {
+                width: 260px;
+                height: 100vh;
+            }
+
+            .app-topbar, .app-content, .app-footer {
+                padding-left: 1.25rem;
+                padding-right: 1.25rem;
+            }
+        }
+
+        /* ============ COMPONENTS ============ */
+        .card {
+            border: 1px solid var(--line);
+            border-radius: var(--radius-lg);
+            box-shadow: none;
+            background-color: var(--surface);
+        }
+
+        .bg-indigo-light {
+            background-color: var(--accent-soft) !important;
+        }
+
+        .table {
+            color: var(--ink);
+            vertical-align: middle;
+        }
+
+            .table thead th {
+                background-color: var(--surface);
+                color: var(--muted);
+                font-family: var(--font-mono);
+                font-weight: 500;
+                font-size: 0.7rem;
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+                border-bottom: 1px solid var(--line);
+                padding: 0.85rem 1.1rem;
+            }
+
+            .table tbody td {
+                padding: 0.85rem 1.1rem;
+                border-bottom: 1px solid var(--line);
+            }
+
+            .table tbody tr:last-child td {
+                border-bottom: none;
+            }
+
+        .btn {
+            font-weight: 600;
+            font-size: 0.86rem;
+            border-radius: var(--radius-sm);
+        }
+
+        .btn-primary {
+            background-color: var(--accent);
+            border-color: var(--accent);
+            padding: 0.55rem 1.1rem;
+        }
+
+            .btn-primary:hover, .btn-primary:focus {
+                background-color: var(--accent-hover);
+                border-color: var(--accent-hover);
+            }
+
+        .btn-outline-primary {
+            color: var(--accent);
+            border-color: var(--accent);
+        }
+
+            .btn-outline-primary:hover {
+                background-color: var(--accent);
+                border-color: var(--accent);
+            }
+
+        .form-control, .form-select {
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--line);
+            padding: 0.55rem 0.85rem;
+            font-size: 0.9rem;
+        }
+
+            .form-control:focus, .form-select:focus {
+                border-color: var(--accent);
+                box-shadow: 0 0 0 3px rgba(14, 107, 98, 0.15);
+            }
+
+        /* Status / priority chips: square, mono, dotted -- not bootstrap pill badges */
+        .badge.rounded-pill {
+            border-radius: var(--radius-sm) !important;
+            font-family: var(--font-mono);
+            font-weight: 600;
+            font-size: 0.68rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+            .badge.rounded-pill::before {
+                content: "";
+                width: 6px;
+                height: 6px;
+                border-radius: 1px;
+                background: currentColor;
+                flex-shrink: 0;
+            }
+
+        footer.footer {
+            display: none; /* superseded by .app-footer */
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">HelpDesk_System</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
+    <div class="app-shell">
+        <aside class="offcanvas-lg offcanvas-start app-sidebar" tabindex="-1" id="sidebarNav">
+            <div class="sidebar-head">
+                <a class="sidebar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <span class="brand-mark"><i class="bi bi-headset"></i></span>
+                    <span class="brand-text">HelpDesk<small>System</small></span>
+                </a>
+                <button type="button" class="btn-close btn-close-white d-lg-none" data-bs-dismiss="offcanvas" data-bs-target="#sidebarNav" aria-label="Close"></button>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+            <nav class="sidebar-nav">
+                <a class="sidebar-link @(currentController == "Tickets" ? "active" : "")" asp-controller="Tickets" asp-action="Index">
+                    <i class="bi bi-ticket-perforated"></i><span>Tickets</span>
+                </a>
+                <a class="sidebar-link @(currentController == "Customers" ? "active" : "")" asp-controller="Customers" asp-action="Index">
+                    <i class="bi bi-people"></i><span>Customers</span>
+                </a>
+                <a class="sidebar-link @(currentController == "Employees" ? "active" : "")" asp-controller="Employees" asp-action="Index">
+                    <i class="bi bi-person-badge"></i><span>Employees</span>
+                </a>
+                <a class="sidebar-link @(currentController == "Departments" ? "active" : "")" asp-controller="Departments" asp-action="Index">
+                    <i class="bi bi-building"></i><span>Departments</span>
+                </a>
+                <a class="sidebar-link @(currentController == "Teams" ? "active" : "")" asp-controller="Teams" asp-action="Index">
+                    <i class="bi bi-people-fill"></i><span>Teams</span>
+                </a>
+                <a class="sidebar-link @(currentController == "Categories" ? "active" : "")" asp-controller="Categories" asp-action="Index">
+                    <i class="bi bi-tags"></i><span>Categories</span>
+                </a>
+            </nav>
+            <div class="sidebar-foot">HELPDESK &middot; V1.0</div>
+        </aside>
+
+        <div class="app-main">
+            <header class="app-topbar">
+                <button class="topbar-toggle d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarNav" aria-controls="sidebarNav">
+                    <i class="bi bi-list"></i>
+                </button>
+                <div class="topbar-heading">
+                    <span class="topbar-eyebrow">Helpdesk / @(currentController ?? "System")</span>
+                    <h1 class="topbar-title">@ViewData["Title"]</h1>
+                </div>
+            </header>
+
+            <main role="main" class="app-content">
+                @RenderBody()
+            </main>
+
+            <footer class="app-footer">
+                <span>&copy; 2026 HelpDesk System &bull; All Rights Reserved</span>
+            </footer>
+        </div>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - HelpDesk_System - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
