@@ -1,0 +1,35 @@
+﻿@model IEnumerable<HelpDesk_System.Models.Team>
+@{
+    ViewData["Title"] = "Teams";
+}
+
+<h2>Teams</h2>
+
+<table class="table table-hover align-middle mt-3">
+    <thead class="table-light">
+        <tr>
+            <th>Team Name</th>
+            <th>Department</th>
+            <th>Team Members</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var team in Model)
+        {
+            <tr>
+                <td>@team.Name</td>
+                <td>@team.Department.Name</td>
+                <td>
+                    @if (team.TeamMembers.Any())
+                    {
+                        @string.Join(", ", team.TeamMembers.Select(tm => $"{tm.Employee.FirstName} {tm.Employee.LastName}"))
+                    }
+                    else
+                    {
+                        <span class="text-muted">No members</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
