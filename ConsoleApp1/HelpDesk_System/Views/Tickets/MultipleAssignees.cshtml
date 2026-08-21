@@ -1,0 +1,22 @@
+﻿@model IEnumerable<HelpDesk_System.Models.ViewModels.MultipleAssigneeTicketViewModel>
+@{
+    ViewData["Title"] = "Multiple-Assignee Tickets";
+}
+
+<h2>Tickets With Multiple Active Assignees</h2>
+<table class="table table-hover align-middle mt-3">
+    <thead class="table-light">
+        <tr><th>Ticket</th><th>Subject</th><th># Assignees</th><th>Assignees</th></tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>#@item.TicketId</td>
+                <td>@item.Subject</td>
+                <td>@item.ActiveAssigneeCount</td>
+                <td>@string.Join(", ", item.Assignees)</td>
+            </tr>
+        }
+    </tbody>
+</table>
