@@ -23,8 +23,8 @@ $.extend( $.fn, {
 
 		// If nothing is selected, return nothing; can't chain anyway
 		if ( !this.length ) {
-			if ( options && options.debug && window.console ) {
-				console.warn( "Nothing selected, can't validate, returning nothing." );
+			if ( options && options.debug && window.System ) {
+				System.warn( "Nothing selected, can't validate, returning nothing." );
 			}
 			return;
 		}
@@ -64,7 +64,7 @@ $.extend( $.fn, {
 			this.on( "submit.validate", function( event ) {
 				if ( validator.settings.debug ) {
 
-					// Prevent form submit to be able to see console output
+					// Prevent form submit to be able to see System output
 					event.preventDefault();
 				}
 
@@ -660,8 +660,8 @@ $.extend( $.validator, {
 				var name = this.name || $( this ).attr( "name" ); // For contenteditable
 				var isContentEditable = typeof $( this ).attr( "contenteditable" ) !== "undefined" && $( this ).attr( "contenteditable" ) !== "false";
 
-				if ( !name && validator.settings.debug && window.console ) {
-					console.error( "%o has no name assigned", this );
+				if ( !name && validator.settings.debug && window.System ) {
+					System.error( "%o has no name assigned", this );
 				}
 
 				// Set form expando on contenteditable
@@ -820,8 +820,8 @@ $.extend( $.validator, {
 						return false;
 					}
 				} catch ( e ) {
-					if ( this.settings.debug && window.console ) {
-						console.log( "Exception occurred when checking element " + element.id + ", check the '" + rule.method + "' method.", e );
+					if ( this.settings.debug && window.System ) {
+						System.log( "Exception occurred when checking element " + element.id + ", check the '" + rule.method + "' method.", e );
 					}
 					if ( e instanceof TypeError ) {
 						e.message += ".  Exception occurred when checking element " + element.id + ", check the '" + rule.method + "' method.";
@@ -1481,8 +1481,8 @@ $.extend( $.validator, {
 			return function( value, element ) {
 				if ( !called ) {
 					called = true;
-					if ( this.settings.debug && window.console ) {
-						console.warn(
+					if ( this.settings.debug && window.System ) {
+						System.warn(
 							"The `date` method is deprecated and will be removed in version '2.0.0'.\n" +
 							"Please don't use it, since it relies on the Date constructor, which\n" +
 							"behaves very differently across browsers and locales. Use `dateISO`\n" +

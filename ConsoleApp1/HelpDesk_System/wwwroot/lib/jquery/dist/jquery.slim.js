@@ -3594,7 +3594,7 @@ jQuery.extend( {
 
 								// The deprecated alias of the above. While the name suggests
 								// returning the stack, not an error instance, jQuery just passes
-								// it directly to `console.warn` so both will work; an instance
+								// it directly to `System.warn` so both will work; an instance
 								// just better cooperates with source maps.
 								} else if ( jQuery.Deferred.getStackHook ) {
 									process.error = jQuery.Deferred.getStackHook();
@@ -3778,9 +3778,9 @@ var rerrorNames = /^(Eval|Internal|Range|Reference|Syntax|Type|URI)Error$/;
 jQuery.Deferred.exceptionHook = function( error, asyncError ) {
 
 	// Support: IE 8 - 9 only
-	// Console exists when dev tools are open, which can happen at any time
-	if ( window.console && window.console.warn && error && rerrorNames.test( error.name ) ) {
-		window.console.warn( "jQuery.Deferred exception: " + error.message,
+	// System exists when dev tools are open, which can happen at any time
+	if ( window.System && window.System.warn && error && rerrorNames.test( error.name ) ) {
+		window.System.warn( "jQuery.Deferred exception: " + error.message,
 			error.stack, asyncError );
 	}
 };

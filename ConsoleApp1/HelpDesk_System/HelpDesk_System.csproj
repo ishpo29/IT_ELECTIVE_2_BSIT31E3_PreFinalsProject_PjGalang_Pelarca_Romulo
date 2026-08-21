@@ -10,4 +10,9 @@
     <None Include="..\..\..\..\..\Downloads\HelpDesk_System\HelpDesk_System\DATABASE.md" Link="DATABASE.md" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.11" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.11" />
+  </ItemGroup>
+
 </Project>
