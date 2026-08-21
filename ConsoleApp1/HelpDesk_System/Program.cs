@@ -1,6 +1,11 @@
+using Microsoft.EntityFrameworkCore;
+using HelpDesk_System.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlite("Data Source=lycevm.db"));
 
 var app = builder.Build();
 
