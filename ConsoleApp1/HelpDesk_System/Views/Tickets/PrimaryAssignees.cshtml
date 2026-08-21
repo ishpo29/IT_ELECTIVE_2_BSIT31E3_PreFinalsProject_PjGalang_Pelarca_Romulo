@@ -1,0 +1,21 @@
+﻿@model IEnumerable<HelpDesk_System.Models.ViewModels.PrimaryAssigneeViewModel>
+@{
+    ViewData["Title"] = "Primary Assignee";
+}
+
+<h2>Primary Assignee per Ticket</h2>
+<table class="table table-hover align-middle mt-3">
+    <thead class="table-light">
+        <tr><th>Ticket</th><th>Subject</th><th>Primary Assignee</th></tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>#@item.TicketId</td>
+                <td>@item.Subject</td>
+                <td>@item.PrimaryAssignee</td>
+            </tr>
+        }
+    </tbody>
+</table>
