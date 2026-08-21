@@ -6,4 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Include="..\..\..\..\..\Downloads\HelpDesk_System\HelpDesk_System\DATABASE.md" Link="DATABASE.md" />
+  </ItemGroup>
+
 </Project>
